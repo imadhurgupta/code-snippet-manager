@@ -1,4 +1,3 @@
-import express from 'express';
 import snippetRoutes from './routes/snippets.js';
 
 
