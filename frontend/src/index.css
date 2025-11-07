@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+html, body, #root { height: 100%; }
+body { @apply bg-slate-50 text-slate-800; }
+
+
+/* minimal PrismJS styling to ensure highlighting looks okay */
+code[class*="language-"],
+pre[class*="language-"] {
+font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+}
+pre[class*="language-"] {
+padding: 1rem;
+border-radius: 0.5rem;
+background: #0b1220;
+color: #e6edf3;
+overflow: auto;
+}
