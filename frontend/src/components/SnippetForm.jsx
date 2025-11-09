@@ -32,7 +32,7 @@ return (
 <option value="bash">Bash</option>
 <option value="plaintext">Plaintext</option>
 </select>
-<input className="p-2 border rounded" placeholder="tags (comma separated)" value={tags} onChange={e => setTags(e.target.value)} />
+<input className="p-2 border rounded" placeholder="Tags (comma separated)" value={tags} onChange={e => setTags(e.target.value)} />
 </div>
 
 
