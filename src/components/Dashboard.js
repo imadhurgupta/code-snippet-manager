@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react'; // 1. Import useCallback
 import { Link } from 'react-router-dom';
 import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -10,12 +10,10 @@ const Dashboard = ({ user }) => {
   const [languageFilter, setLanguageFilter] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    fetchSnippets();
-  }, [user]);
+  // 2. Wrap the function in useCallback so it is stable
+  const fetchSnippets = useCallback(async () => {
+    if (!user) return; // Safety check
 
-  const fetchSnippets = async () => {
     try {
       const q = query(
         collection(db, "snippets"),
@@ -32,7 +30,12 @@ const Dashboard = ({ user }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]); // Re-create this function only if 'user' changes
+
+  // 3. Add fetchSnippets to the dependency array
+  useEffect(() => {
+    fetchSnippets();
+  }, [fetchSnippets]);
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this snippet?")) {
@@ -47,7 +50,7 @@ const Dashboard = ({ user }) => {
 
   const filteredSnippets = snippets.filter(snippet => {
     const matchesSearch = snippet.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         snippet.description.toLowerCase().includes(searchTerm.toLowerCase());
+                          snippet.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesLanguage = !languageFilter || snippet.language === languageFilter;
     return matchesSearch && matchesLanguage;
   });
@@ -66,16 +69,16 @@ const Dashboard = ({ user }) => {
     <div>
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-2">My Code Snippets</h1>
-        <p className="text-gray-400">Manage and Organize Your Code Snippets</p>
+        <p className="text-gray-400">Manage and organize your code snippets</p>
       </div>
 
       <div className="mb-6 flex flex-col md:flex-row gap-4">
         <input
           type="text"
-          placeholder="Search Snippets..."
+          placeholder="Search Snippets...."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-1 px-4 py-2 bg-slate-800 rounded-lg focus:outline-none focus:ring-2 ring-primary text-black"
+          className="flex-1 px-4 py-2 bg-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-black"
         />
         
         <select

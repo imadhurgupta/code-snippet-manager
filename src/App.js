@@ -7,7 +7,6 @@ import Auth from './components/Auth';
 import Dashboard from './components/Dashboard';
 import SnippetForm from './components/SnippetForm';
 import SnippetDetail from './components/SnippetDetail';
-import SnippetCard from './components/SnippetCard';
 
 function App() {
   const [user, setUser] = useState(null);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -12,12 +12,8 @@ const SnippetDetail = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    fetchSnippet();
-  }, [id]);
-
-  const fetchSnippet = async () => {
+  // 1. Wrap fetchSnippet in useCallback
+  const fetchSnippet = useCallback(async () => {
     try {
       const docRef = doc(db, "snippets", id);
       const docSnap = await getDoc(docRef);
@@ -31,7 +27,12 @@ const SnippetDetail = ({ user }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, navigate]); // Dependencies needed inside the function
+
+  // 2. Add fetchSnippet to dependency array
+  useEffect(() => {
+    fetchSnippet();
+  }, [fetchSnippet]);
 
   const handleCopy = async () => {
     try {

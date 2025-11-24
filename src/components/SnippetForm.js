@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { collection, addDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -21,14 +21,8 @@ const SnippetForm = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
 
-  useEffect(() => {
-    if (id) {
-      setIsEdit(true);
-      fetchSnippet();
-    }
-  }, [id]);
-
-  const fetchSnippet = async () => {
+  // 1. Wrap fetchSnippet in useCallback
+  const fetchSnippet = useCallback(async () => {
     try {
       const docRef = doc(db, "snippets", id);
       const docSnap = await getDoc(docRef);
@@ -45,7 +39,15 @@ const SnippetForm = ({ user }) => {
     } catch (error) {
       console.error("Error fetching snippet:", error);
     }
-  };
+  }, [id]); // Re-create only when ID changes
+
+  // 2. Add fetchSnippet to dependency array
+  useEffect(() => {
+    if (id) {
+      setIsEdit(true);
+      fetchSnippet();
+    }
+  }, [id, fetchSnippet]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

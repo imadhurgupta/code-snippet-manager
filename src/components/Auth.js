@@ -25,7 +25,6 @@ const Auth = () => {
     }
   };
 
-
   const handleGoogleSignIn = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
@@ -47,8 +46,6 @@ const Auth = () => {
             {error}
           </div>
         )}
-
-
 
         <form onSubmit={handleAuth} className="space-y-6">
           <div>
