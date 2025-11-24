@@ -5,8 +5,6 @@ import { useNavigate } from 'react-router-dom';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [FirstName, setFirstName] = useState('');
-  const [LastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -19,13 +17,14 @@ const Auth = () => {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
       } else {
-        await createUserWithEmailAndPassword(auth, FirstName, LastName, email, password);
+        await createUserWithEmailAndPassword(auth, email, password);
       }
       navigate('/');
     } catch (err) {
       setError(err.message);
     }
   };
+
 
   const handleGoogleSignIn = async () => {
     try {
